@@ -11,11 +11,11 @@ dependencies {
 
 tasks {
     named<ShadowJar>("shadowJar") {
-        archiveBaseName.set("gradleHelloWorld")
+        archiveBaseName.set("guavaThickJar")
         archiveVersion.set("0.1")
         archiveClassifier.set("")
         manifest {
-            attributes(mapOf("Main-Class" to "ru.otus.App"))
+            attributes(mapOf("Main-Class" to "ru.otus.HelloOtus"))
         }
     }
 

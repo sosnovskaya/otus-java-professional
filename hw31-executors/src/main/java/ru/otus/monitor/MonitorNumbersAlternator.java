@@ -19,9 +19,8 @@ public class MonitorNumbersAlternator implements NumbersAlternator {
 
     @Override
     public void alternateNumbers() {
-        MonitorNumbersAlternator alternator = new MonitorNumbersAlternator();
-        new Thread(() -> alternator.action(new ArrayDeque<>(numbers), SECOND), FIRST).start();
-        new Thread(() -> alternator.action(new ArrayDeque<>(numbers), FIRST), SECOND).start();
+        new Thread(() -> action(new ArrayDeque<>(numbers), SECOND), FIRST).start();
+        new Thread(() -> action(new ArrayDeque<>(numbers), FIRST), SECOND).start();
     }
 
     private synchronized void action(Deque<Integer> numbers, String next) {

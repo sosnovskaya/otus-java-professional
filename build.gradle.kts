@@ -1,4 +1,3 @@
-import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 
@@ -36,6 +35,7 @@ allprojects {
                 mavenBom(BOM_COORDINATES)
             }
             dependency("com.google.guava:guava:$guava")
+            dependency("ch.qos.logback:logback-classic:$guava")
         }
     }
 }

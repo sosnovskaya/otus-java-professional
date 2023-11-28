@@ -1,6 +1,8 @@
 rootProject.name = "otusJava"
 include("hw01-gradle")
 include("hw31-executors")
+include("hw31-executors")
+include ("hw32-thread-safe-collections:QueueDemo")
 
 pluginManagement {
     val dependencyManagement: String by settings

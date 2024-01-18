@@ -3,7 +3,6 @@ package ru.otus.crm.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,16 +11,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,8 +38,7 @@ public class Client implements Cloneable {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "client_id")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "client")
     private List<Phone> phones;
 
     public Client(String name) {
@@ -63,6 +56,9 @@ public class Client implements Cloneable {
         this.name = name;
         this.address = address;
         this.phones = phones;
+        if (phones != null) {
+            phones.forEach(phone -> phone.setClient(this));
+        }
     }
 
     @Override

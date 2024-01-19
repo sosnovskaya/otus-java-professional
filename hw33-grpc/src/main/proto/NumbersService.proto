@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package ru.numbers;
+option java_multiple_files = true;
+
+message NumbersRequest {
+  int64 firstValue = 1;
+  int64 lastValue = 2;
+}
+
+message NumbersResponse {
+  int64 number = 1;
+}
+
+service NumbersService  {
+  rpc Number(NumbersRequest) returns (stream NumbersResponse) {};
+}

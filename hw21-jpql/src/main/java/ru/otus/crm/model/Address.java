@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "address")
 public class Address implements Cloneable {
@@ -27,10 +29,6 @@ public class Address implements Cloneable {
     @Column(name = "street")
     private String street;
 
-    public Address(Long id, String street) {
-        this.id = id;
-        this.street = street;
-    }
     @Override
     @SuppressWarnings({"java:S2975", "java:S1182"})
     public Address clone() {

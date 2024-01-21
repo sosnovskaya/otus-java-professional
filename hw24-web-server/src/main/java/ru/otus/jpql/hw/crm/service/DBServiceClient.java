@@ -1,6 +1,6 @@
 package ru.otus.jpql.hw.crm.service;
 
-import ru.otus.crm.model.Client;
+import ru.otus.jpql.hw.crm.model.Client;
 
 import java.util.List;
 import java.util.Optional;

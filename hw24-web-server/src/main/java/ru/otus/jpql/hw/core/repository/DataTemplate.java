@@ -1,5 +1,6 @@
 package ru.otus.jpql.hw.core.repository;
 
+
 import org.hibernate.Session;
 
 import java.util.List;

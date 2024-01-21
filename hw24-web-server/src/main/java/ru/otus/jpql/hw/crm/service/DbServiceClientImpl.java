@@ -2,9 +2,9 @@ package ru.otus.jpql.hw.crm.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.core.repository.DataTemplate;
-import ru.otus.core.sessionmanager.TransactionManager;
-import ru.otus.crm.model.Client;
+import ru.otus.jpql.hw.core.repository.DataTemplate;
+import ru.otus.jpql.hw.core.sessionmanager.TransactionManager;
+import ru.otus.jpql.hw.crm.model.Client;
 
 import java.util.List;
 import java.util.Optional;

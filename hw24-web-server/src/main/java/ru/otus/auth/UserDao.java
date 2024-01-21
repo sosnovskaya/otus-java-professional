@@ -1,7 +1,8 @@
-package ru.otus.dao;
+package ru.otus.auth;
+
+import ru.otus.model.User;
 
 import java.util.Optional;
-import ru.otus.model.User;
 
 public interface UserDao {
 

@@ -1,13 +1,13 @@
-package ru.otus.services;
+package ru.otus.auth;
 
-import java.util.List;
-import java.util.Optional;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.RolePrincipal;
 import org.eclipse.jetty.security.UserPrincipal;
 import org.eclipse.jetty.util.security.Password;
-import ru.otus.dao.UserDao;
 import ru.otus.model.User;
+
+import java.util.List;
+import java.util.Optional;
 
 public class InMemoryLoginServiceImpl extends AbstractLoginService {
 

@@ -1,16 +1,17 @@
 package ru.otus.servlet;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.Collections;
 import ru.otus.services.TemplateProcessor;
 import ru.otus.services.UserAuthService;
+
+import java.io.IOException;
+import java.util.Collections;
+
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @SuppressWarnings({"squid:S1948"})
 public class LoginServlet extends HttpServlet {
@@ -44,7 +45,7 @@ public class LoginServlet extends HttpServlet {
         if (userAuthService.authenticate(name, password)) {
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
-            response.sendRedirect("/users");
+            response.sendRedirect("/clients");
         } else {
             response.setStatus(SC_UNAUTHORIZED);
         }

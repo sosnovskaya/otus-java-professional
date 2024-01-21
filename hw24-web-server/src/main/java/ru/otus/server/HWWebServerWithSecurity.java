@@ -5,27 +5,34 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.otus.dao.UserDao;
 import ru.otus.helpers.FileSystemHelper;
+import ru.otus.jpql.hw.crm.service.DBServiceClient;
 import ru.otus.services.TemplateProcessor;
-import ru.otus.servlet.UsersApiServlet;
-import ru.otus.servlet.UsersServlet;
+import ru.otus.services.UserAuthService;
+import ru.otus.servlet.AuthorizationFilter;
+import ru.otus.servlet.ClientsApiServlet;
+import ru.otus.servlet.ClientsServlet;
+import ru.otus.servlet.LoginServlet;
 
-public class UsersWebServerSimple implements UsersWebServer {
+import java.util.Arrays;
+
+public class HWWebServerWithSecurity implements HWWebServer {
     private static final String START_PAGE_NAME = "index.html";
     private static final String COMMON_RESOURCES_DIR = "static";
-
-    private final UserDao userDao;
+    private final DBServiceClient dbServiceClient;
     private final Gson gson;
     protected final TemplateProcessor templateProcessor;
     private final Server server;
+    private final UserAuthService authService;
 
-    public UsersWebServerSimple(int port, UserDao userDao, Gson gson, TemplateProcessor templateProcessor) {
-        this.userDao = userDao;
+    public HWWebServerWithSecurity(int port, DBServiceClient dbServiceClient, Gson gson, TemplateProcessor templateProcessor, UserAuthService authService) {
+        this.dbServiceClient = dbServiceClient;
         this.gson = gson;
         this.templateProcessor = templateProcessor;
+        this.authService = authService;
         server = new Server(port);
     }
 
@@ -48,20 +55,23 @@ public class UsersWebServerSimple implements UsersWebServer {
     }
 
     private Server initContext() {
-
         ResourceHandler resourceHandler = createResourceHandler();
         ServletContextHandler servletContextHandler = createServletContextHandler();
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(resourceHandler);
-        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*"));
+        handlers.addHandler(applySecurity(servletContextHandler, "/clients", "/api/clients/*"));
 
         server.setHandler(handlers);
         return server;
     }
 
-    @SuppressWarnings({"squid:S1172"})
     protected Handler applySecurity(ServletContextHandler servletContextHandler, String... paths) {
+        servletContextHandler.addServlet(new ServletHolder(new LoginServlet(templateProcessor, authService)), "/login");
+        AuthorizationFilter authorizationFilter = new AuthorizationFilter();
+        Arrays.stream(paths)
+                .forEachOrdered(
+                        path -> servletContextHandler.addFilter(new FilterHolder(authorizationFilter), path, null));
         return servletContextHandler;
     }
 
@@ -75,8 +85,8 @@ public class UsersWebServerSimple implements UsersWebServer {
 
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, userDao)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(userDao, gson)), "/api/user/*");
+        servletContextHandler.addServlet(new ServletHolder(new ClientsServlet(templateProcessor, dbServiceClient)), "/clients");
+        servletContextHandler.addServlet(new ServletHolder(new ClientsApiServlet(dbServiceClient, gson)), "/api/clients/*");
         return servletContextHandler;
     }
 }

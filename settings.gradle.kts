@@ -2,6 +2,7 @@ rootProject.name = "otusJava"
 include("hw01-gradle")
 include("hw21-jpql")
 include("hw24-web-server")
+include("hw25-dependency-injection")
 include("hw31-executors")
 include ("hw32-thread-safe-collections:QueueDemo")
 include ("hw33-grpc")

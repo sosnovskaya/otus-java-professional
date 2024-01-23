@@ -1,25 +1,62 @@
 package ru.otus.appcontainer;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
+
+import static ru.otus.utils.ReflectionUtils.getAnnotatedMethods;
+import static ru.otus.utils.ReflectionUtils.invokeMethod;
+import static ru.otus.utils.ReflectionUtils.newInstance;
 
 @SuppressWarnings("squid:S1068")
 public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
+    private final Class<? extends Annotation> COMPONENT_ANNOTATION = AppComponent.class;
 
     public AppComponentsContainerImpl(Class<?> initialConfigClass) {
         processConfig(initialConfigClass);
     }
 
+    @Override
+    public <C> C getAppComponent(Class<C> componentClass) {
+        List<Object> assignableComponents = appComponents.stream().filter(component -> componentClass.isAssignableFrom(component.getClass())).toList();
+        if (assignableComponents.isEmpty()) {
+            throw new RuntimeException(String.format("%s component is not found in the context", componentClass));
+        } else if (assignableComponents.size() > 1) {
+            throw new RuntimeException(String.format("Found more then 1 option for the component %s", componentClass));
+        } else {
+            return (C) assignableComponents.get(0);
+        }
+    }
+
+    @Override
+    public <C> C getAppComponent(String componentName) {
+        var component = appComponentsByName.get(componentName);
+        if (component == null) {
+            throw new RuntimeException(String.format("%s component is not found in the context", componentName));
+        }
+        return (C) component;
+    }
+
     private void processConfig(Class<?> configClass) {
         checkConfigClass(configClass);
-        // You code here...
+        getAnnotatedMethods(configClass, COMPONENT_ANNOTATION).stream()
+                .sorted(Comparator.comparingInt(method -> method.getAnnotation(AppComponent.class).order()))
+                .forEach(method -> {
+                    var componentName = method.getAnnotation(AppComponent.class).name();
+                    var component = invokeMethod(newInstance(configClass), method, getComponents(method.getParameterTypes()));
+                    addComponent(componentName, component);
+                });
     }
 
     private void checkConfigClass(Class<?> configClass) {
@@ -28,13 +65,17 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         }
     }
 
-    @Override
-    public <C> C getAppComponent(Class<C> componentClass) {
-        return null;
+    private Object[] getComponents(Class<?>[] types) {
+        return Arrays.stream(types)
+                .map(this::getAppComponent)
+                .toArray();
     }
 
-    @Override
-    public <C> C getAppComponent(String componentName) {
-        return null;
+    private void addComponent(String componentName, Object component) {
+        if(appComponentsByName.containsKey(componentName)) {
+            throw new RuntimeException(String.format("Found more then 1 component with name %s", componentName));
+        }
+        appComponentsByName.put(componentName, component);
+        appComponents.add(component);
     }
 }

@@ -1,14 +1,5 @@
 package ru.otus;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-
-import java.io.PrintStream;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,27 +8,39 @@ import ru.otus.appcontainer.AppComponentsContainerImpl;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 import ru.otus.config.AppConfig;
-import ru.otus.services.*;
+import ru.otus.services.EquationPreparer;
+import ru.otus.services.EquationPreparerImpl;
+import ru.otus.services.IOService;
+import ru.otus.services.IOServiceStreams;
+import ru.otus.services.PlayerService;
+
+import java.io.PrintStream;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class AppTest {
 
-    @Disabled("Эту аннотацию надо убрать")
     @DisplayName("Из контекста тремя способами должен корректно доставаться компонент с проставленными полями")
     @ParameterizedTest(name = "Достаем по: {0}")
     @CsvSource(
             value = {
-                "GameProcessor, ru.otus.services.GameProcessor",
-                "GameProcessorImpl, ru.otus.services.GameProcessor",
-                "gameProcessor, ru.otus.services.GameProcessor",
-                "IOService, ru.otus.services.IOService",
-                "IOServiceStreams, ru.otus.services.IOService",
-                "ioService, ru.otus.services.IOService",
-                "PlayerService, ru.otus.services.PlayerService",
-                "PlayerServiceImpl, ru.otus.services.PlayerService",
-                "playerService, ru.otus.services.PlayerService",
-                "EquationPreparer, ru.otus.services.EquationPreparer",
-                "EquationPreparerImpl, ru.otus.services.EquationPreparer",
-                "equationPreparer, ru.otus.services.EquationPreparer"
+                    "GameProcessor, ru.otus.services.GameProcessor",
+                    "GameProcessorImpl, ru.otus.services.GameProcessor",
+                    "gameProcessor, ru.otus.services.GameProcessor",
+                    "IOService, ru.otus.services.IOService",
+                    "IOServiceStreams, ru.otus.services.IOService",
+                    "ioService, ru.otus.services.IOService",
+                    "PlayerService, ru.otus.services.PlayerService",
+                    "PlayerServiceImpl, ru.otus.services.PlayerService",
+                    "playerService, ru.otus.services.PlayerService",
+                    "EquationPreparer, ru.otus.services.EquationPreparer",
+                    "EquationPreparerImpl, ru.otus.services.EquationPreparer",
+                    "equationPreparer, ru.otus.services.EquationPreparer"
             })
     void shouldExtractFromContextCorrectComponentWithNotNullFields(String classNameOrBeanId, Class<?> rootClass)
             throws Exception {
@@ -74,7 +77,6 @@ class AppTest {
         }
     }
 
-    @Disabled("Эту аннотацию надо убрать")
     @DisplayName("В контексте не должно быть компонентов с одинаковым именем")
     @Test
     void shouldNotAllowTwoComponentsWithSameName() {
@@ -82,7 +84,6 @@ class AppTest {
                 .isInstanceOf(Exception.class);
     }
 
-    @Disabled("Эту аннотацию надо убрать")
     @DisplayName(
             "При попытке достать из контекста отсутствующий или дублирующийся компонент, должно выкидываться исключение")
     @Test
@@ -98,7 +99,8 @@ class AppTest {
 
     @AppComponentsContainerConfig(order = 1)
     public static class ConfigWithTwoComponentsWithSameName {
-        public ConfigWithTwoComponentsWithSameName() {}
+        public ConfigWithTwoComponentsWithSameName() {
+        }
 
         @AppComponent(order = 1, name = "equationPreparer")
         public EquationPreparer equationPreparer1() {

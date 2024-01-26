@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create client</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+
+    <script>
+        function saveClient() {
+            const clientDataContainer = document.getElementById('clientDataContainer');
+            const clientNameInput = document.getElementById("clientName");
+            const clientAddressInput = document.getElementById("clientAddress");
+            const clientPhonesInput = document.getElementById("clientPhones");
+            const clientName = clientNameInput.value;
+            const clientAddress = clientAddressInput.value;
+            const clientPhones = clientPhonesInput.value;
+            fetch('/api/clients', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({name: clientName, address: clientAddress, phones: clientPhones})
+            })
+                .then(response => response.json())
+                .then(client => clientDataContainer.innerHTML = 'Клиент создан: ' + JSON.stringify(client));
+        }
+    </script>
+
+</head>
+<body>
+
+<form id="create-form">
+    <h1>New Client:</h1>
+
+    <div class="row">
+        <label for="clientName">Name:</label>
+        <input id="clientName" name="name" type="text" value="John Doe"/>
+    </div>
+
+    <div class="row">
+        <label for="clientAddress">Address:</label>
+        <input id="clientAddress" name="address" type="text" value="Earth"/>
+    </div>
+
+    <div class="row">
+        <label for="clientPhones">Phones:</label>
+        <input id="clientPhones" name="phones" type="text" value="8 800 235 35 35"/>
+    </div>
+
+    <div class="row">
+        <button type="button" onclick="saveClient()">Save</button>
+    </div>
+</form>
+<pre id = "clientDataContainer"></pre>
+
+<br>
+<a th:href="@{/}">Вернуться в основное меню</a>
+
+</body>
+</html>

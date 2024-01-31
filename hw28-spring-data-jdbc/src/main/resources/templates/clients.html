@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Clients</title>
+
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .clients, .clients td {
+            border: 1px solid lightgray;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            display: block;
+        }
+
+        input {
+            width: 150px;
+        }
+
+
+        select {
+            width: 154px;
+        }
+
+        button {
+            width: 250px;
+        }
+
+        .controls-container {
+            margin-bottom: 5px;
+        }
+
+        .single-button-container {
+            margin-left: 158px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+<h2>Действия доступные с клиентами</h2>
+
+<br/><br/>
+<h3>Создать нового клиента</h3>
+<a th:href="@{/clients/create}" href="clientCreate.html">Создать</a>
+
+<br/><br/>
+<h3>Посмотреть список всех клиентов</h3>
+<a th:href="@{/clients}" >Посмотреть</a>
+
+</body>
+</html>

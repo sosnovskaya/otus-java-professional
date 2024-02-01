@@ -55,6 +55,8 @@ allprojects {
     val springDocOpenapiUi: String by project
     val jsr305: String by project
     val grpc: String by project
+    val wiremock: String by project
+    val r2dbcPostgresql: String by project
 
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
@@ -98,6 +100,8 @@ allprojects {
             dependency("io.grpc:grpc-netty:$grpc")
             dependency("io.grpc:grpc-protobuf:$grpc")
             dependency("io.grpc:grpc-stub:$grpc")
+            dependency("com.github.tomakehurst:wiremock-standalone:$wiremock")
+            dependency("io.r2dbc:r2dbc-postgresql:$r2dbcPostgresql")
         }
     }
 
@@ -118,6 +122,8 @@ allprojects {
             force("org.sonarsource.sslr:sslr-core:1.24.0.633")
             force("org.eclipse.platform:org.eclipse.osgi:3.18.400")
             force("org.eclipse.platform:org.eclipse.equinox.common:3.18.0")
+            force("org.ow2.asm:asm:9.6")
+            force("com.fasterxml.jackson:jackson-bom:2.16.0")
         }
     }
 }

@@ -7,6 +7,9 @@ include("hw28-spring-data-jdbc")
 include("hw31-executors")
 include ("hw32-thread-safe-collections:QueueDemo")
 include ("hw33-grpc")
+include ("hw37-webflux")
+include ("hw37-webflux:client-service")
+include ("hw37-webflux:datastore-service")
 
 pluginManagement {
     val jgitver: String by settings
